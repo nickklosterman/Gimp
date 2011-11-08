@@ -1,0 +1,2 @@
+get gimp-levels working
+save off a thumbnail for uploading on DA

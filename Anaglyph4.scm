@@ -1,4 +1,4 @@
-(define (script-fu-anaglyph4 theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior)
+(define (script-fu-anaglyph4 theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior levelsmode)
 
 
   (let* (
@@ -23,7 +23,7 @@
     (gimp-image-add-layer theImage displmapLyr -1)
     (gimp-desaturate-full displmapLyr DESATURATE-LUMINOSITY)
 					;(gimp-levels displmapLyr HISTOGRAM-RGB 0 255 1.0 0 128)
-    (gimp-levels displmapLyr 5 0 255 1.0 0 128)
+    (gimp-levels displmapLyr levelsmode 0 255 1.0 0 128)
 
 					;create Cyan layer         
     (gimp-image-add-layer theImage cyanLyr -1)
@@ -42,7 +42,7 @@
     (plug-in-displace RUN-NONINTERACTIVE theImage cyanLyr (- 0 displacement_offset_x) (- 0 displacement_offset_y) 1 1 displmapLyr displmapLyr edge_behavior)  
 
 ;merge layers down to clean up and create the single anaglyph image
-(gimp-image-merge-down theImage redLyr 2)
+    (gimp-image-merge-down theImage redLyr 2)
 					;create undo group 
     (gimp-image-undo-group-end theImage)
 
@@ -50,7 +50,7 @@
     )
   )
 (script-fu-register "script-fu-anaglyph4"
-                    _"<Image>/Script-Fu/AnaglyphTools/Anaglyph4"
+                    _"<Image>/Script-Fu/AnaglyphTools/AnaglyphFromImage"
                     "Processes an image createing a depth map from the given image and then creating an anaglyph."
                     "InkyDinky"
                     "InkyDinky"
@@ -62,7 +62,8 @@
 		    SF-ADJUSTMENT "Y/Tangent Displacement Offset (pixels)" (list 0 0 60 1 10 0 SF-SLIDER )
 		    SF-OPTION "Displacement Mode"  '("Cartesian" "Polar");this doesn't do anything
 		    SF-OPTION "Edge Behavior"  '("Wrap" "Smear" "Black")
-
+		    SF-OPTION "Levels Mode"  '("Value" "Red" "Green" "Blue" "Al\
+pha" "RGB")
                     )
 
 					;script to creat array of 256 zeroes to remove channels.

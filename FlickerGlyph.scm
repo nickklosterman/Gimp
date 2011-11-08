@@ -1,4 +1,4 @@
-(define (script-fu-flickerglyph theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior)
+(define (script-fu-levels theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior levelsmode)
 
 
   (let* (
@@ -14,25 +14,11 @@
 
 					;create undo group 
     (gimp-image-undo-group-start theImage)
+
 					;create Displacement Map Layer
-    ;(gimp-image-add-layer theImage displmapLyr -1)
-    ;(gimp-desaturate-full displmapLyr DESATURATE-LUMINOSITY)
-					;(gimp-levels displmapLyr HISTOGRAM-RGB 0 255 1.0 0 128)
-;    (gimp-levels displmapLyr 5 0 255 1.0 0 128)
-
-					;create Cyan layer         
-    (gimp-image-add-layer theImage cyanLyr -1)
-    (gimp-drawable-set-name cyanLyr "AnaglyphRedCyan (100 ms)")
-					;create Red layer         
-    (gimp-image-add-layer theImage redLyr -1)
-    (gimp-drawable-set-name redLyr "Red (100 ms)")
-
-
-					;Apply displacement map, the negative of the value is used for the cyan layer
-    (plug-in-displace RUN-INTERACTIVE theImage redLyr displacement_offset_x displacement_offset_y 1 1 displmapLyr displmapLyr edge_behavior)
-    (plug-in-displace RUN-INTERACTIVE theImage cyanLyr (- 0 displacement_offset_x) (- 0 displacement_offset_y) 1 1 displmapLyr displmapLyr edge_behavior)  
-
-
+    (gimp-image-add-layer theImage displmapLyr -1)
+;    (gimp-desaturate-full displmapLyr DESATURATE-LUMINOSITY)
+    (gimp-levels displmapLyr levelsmode 0 255 1.0 0 128)
 					;create undo group 
     (gimp-image-undo-group-end theImage)
 
@@ -52,6 +38,8 @@
 		    SF-ADJUSTMENT "Y/Tangent Displacement Offset (pixels)" (list 0 0 60 1 10 0 SF-SLIDER )
 		    SF-OPTION "Displacement Mode"  '("Cartesian" "Polar");this doesn't do anything
 		    SF-OPTION "Edge Behavior"  '("Wrap" "Smear" "Black")
+SF-OPTION "Levels Mode"  '("Value" "Red" "Green" "Blue" "Al\
+pha" "RGB")
 
                     )
 

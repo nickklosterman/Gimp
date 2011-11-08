@@ -52,6 +52,9 @@
 (plug-in-displace RUN-NONINTERACTIVE theImage redLyr displacement_offset_x displacement_offset_y 1 1 theImageMapLayer theImageMapLayer edge_behavior)
 
 (plug-in-displace RUN-NONINTERACTIVE theImage cyanLyr (- 0 displacement_offset_x) (- 0 displacement_offset_y) 1 1 theImageMapLayer theImageMapLayer edge_behavior)  ;if I change the do-x and do-y variables (from  1's to 0's) then I don't get the vector-ref out of bounds error
+
+;merge layers down to clean up and create the single anaglyph image
+(gimp-image-merge-down theImage redLyr 2)
 ;create undo group 
  (gimp-image-undo-group-end theImage)
 
@@ -59,7 +62,7 @@
     )
   )
 (script-fu-register "script-fu-anaglyph3"
-                    _"<Image>/Script-Fu/AnaglyphTools/Anaglyph3"
+                    _"<Image>/Script-Fu/AnaglyphTools/AnaglyphFromImageAndDisplMap"
                     "Processes an image and depth-map into a red-cyan anaglyph.Background as bottommost layer, disp map as topmost layer" ; works best if disp map is scaled using curves to 0-127 vs 0-255
                     "InkyDinky"
                     "InkyDinky"

@@ -25,9 +25,9 @@
     (gimp-displays-flush)
     )
   )
-(script-fu-register "script-fu-flickerglyph"
-                    _"<Image>/Script-Fu/AnaglyphTools/FlickerGlyph"
-                    "Processes an image createing a depth map from the given image and then creating a flickerglyph."
+(script-fu-register "script-fu-levels"
+                    _"<Image>/Script-Fu/AnaglyphTools/Levels"
+                    "ap from the given image and then creating a flickerglyph."
                     "InkyDinky"
                     "InkyDinky"
                     "2011 11 9"
