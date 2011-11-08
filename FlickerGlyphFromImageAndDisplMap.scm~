@@ -1,11 +1,6 @@
-(define (script-fu-levels theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior levelsmode)
-
+(define (script-fu-flickerglyph_no_displ_map theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior levelsmode)
 
   (let* (
-	 (theLayersList (cadr (gimp-image-get-layers theImage)))
-
-	 ( displmapLyr  (aref theLayersList 0)) ;if you have multiple layers  the image map ne                                                                
-	 (theBackgroundLayer (aref theLayersList 1))
 	 (displmapLyr (car (gimp-layer-copy drawable TRUE)))
 	 (redLyr (car (gimp-layer-copy drawable TRUE)))
 	 (cyanLyr (car (gimp-layer-copy drawable TRUE)))
@@ -17,16 +12,29 @@
 
 					;create Displacement Map Layer
     (gimp-image-add-layer theImage displmapLyr -1)
-;    (gimp-desaturate-full displmapLyr DESATURATE-LUMINOSITY)
+    (gimp-desaturate-full displmapLyr DESATURATE-LUMINOSITY)
     (gimp-levels displmapLyr levelsmode 0 255 1.0 0 128)
-					;create undo group 
+
+                                      ;create Cyan layer                                         
+    (gimp-image-add-layer theImage cyanLyr -1)
+    (gimp-drawable-set-name cyanLyr "Wiggle1 (100 ms)")
+    
+                                    ;create Red layer                                          
+    (gimp-image-add-layer theImage redLyr -1)
+    (gimp-drawable-set-name redLyr "Wiggle2 (100 ms)")
+    
+                                        ;Apply displacement map, the negative of the value is used for the cyan layer   
+    (plug-in-displace RUN-NONINTERACTIVE theImage redLyr displacement_offset_x displacement_offset_y 1 1 displmapLyr displmapLyr edge_behavior)
+    (plug-in-displace RUN-NONINTERACTIVE theImage cyanLyr (- 0 displacement_offset_x) (- 0 displacement_offset_y) 1 1 displmapLyr displmapLyr edge_behavior)
+
+		;create undo group 
     (gimp-image-undo-group-end theImage)
 
     (gimp-displays-flush)
     )
   )
-(script-fu-register "script-fu-flickerglyph"
-                    _"<Image>/Script-Fu/AnaglyphTools/FlickerGlyph"
+(script-fu-register "script-fu-flickerglyph_displ_map"
+                    _"<Image>/Script-Fu/AnaglyphTools/FlickerGlyph-from-Image-and-Displ-Map"
                     "Processes an image createing a depth map from the given image and then creating a flickerglyph."
                     "InkyDinky"
                     "InkyDinky"

@@ -1,7 +1,11 @@
-(define (script-fu-flickerglyph_no_displ_map theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior levelsmode)
+(define (script-fu-flickerglyph_displ_map theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior rescale_levels levelsmode)
 
   (let* (
-	 (displmapLyr (car (gimp-layer-copy drawable TRUE)))
+ (theLayersList (cadr (gimp-image-get-layers theImage)))
+        (displmapLyr (aref theLayersList 0)) ;if you have multiple layers the image map needs to be the topmost layer
+        (theBackgroundLayer (aref theLayersList 1))
+
+
 	 (redLyr (car (gimp-layer-copy drawable TRUE)))
 	 (cyanLyr (car (gimp-layer-copy drawable TRUE)))
 
@@ -10,9 +14,7 @@
 					;create undo group 
     (gimp-image-undo-group-start theImage)
 
-					;create Displacement Map Layer
-    (gimp-image-add-layer theImage displmapLyr -1)
-    (gimp-desaturate-full displmapLyr DESATURATE-LUMINOSITY)
+;(if (rescale_levels)
     (gimp-levels displmapLyr levelsmode 0 255 1.0 0 128)
 
                                       ;create Cyan layer                                         
@@ -33,8 +35,8 @@
     (gimp-displays-flush)
     )
   )
-(script-fu-register "script-fu-flickerglyph_no_displ_map"
-                    _"<Image>/Script-Fu/AnaglyphTools/FlickerGlyph-From-Image"
+(script-fu-register "script-fu-flickerglyph_displ_map"
+                    _"<Image>/Script-Fu/AnaglyphTools/FlickerGlyph-from-Image-and-Displ-Map"
                     "Processes an image createing a depth map from the given image and then creating a flickerglyph."
                     "InkyDinky"
                     "InkyDinky"
@@ -46,6 +48,7 @@
 		    SF-ADJUSTMENT "Y/Tangent Displacement Offset (pixels)" (list 0 0 60 1 10 0 SF-SLIDER )
 		    SF-OPTION "Displacement Mode"  '("Cartesian" "Polar");this doesn't do anything
 		    SF-OPTION "Edge Behavior"  '("Wrap" "Smear" "Black")
+  SF-TOGGLE     "Rescale Levels?"   FALSE
 SF-OPTION "Levels Mode"  '("Value" "Red" "Green" "Blue" "Al\
 pha" "RGB")
 

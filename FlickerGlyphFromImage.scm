@@ -13,7 +13,9 @@
 					;create Displacement Map Layer
     (gimp-image-add-layer theImage displmapLyr -1)
     (gimp-desaturate-full displmapLyr DESATURATE-LUMINOSITY)
-    (gimp-levels displmapLyr levelsmode 0 255 1.0 0 128)
+    (gimp-levels-stretch displmapLyr);stretch the levels to cover whole range. This won't make that much of a difference unless the image is horribly biased toward light or dark colors. This is because the amount of stretching is halved unless I fiddle with the gamma
+    (gimp-levels displmapLyr levelsmode 0 255 1.0 0 128);now restrict to 0-128
+
 
                                       ;create Cyan layer                                         
     (gimp-image-add-layer theImage cyanLyr -1)
