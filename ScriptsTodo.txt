@@ -7,3 +7,5 @@ ask if want to contract levels
 ask if anaglyph or wiggle
 
 automate and perform in imagemagick
+
+create script to clean up emacs autosaves (#file.ext# nned to use rm ./#file.ext# ) and emacs backups (file.ext~)
