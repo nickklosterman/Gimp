@@ -9,12 +9,12 @@
 	 (cyanLyr (car (gimp-layer-copy drawable TRUE)))
 	 )
 
-					;create undo group 
+;create undo group 
     (gimp-image-undo-group-start theImage)
-					;create Cyan layer
+;create Cyan layer
     (gimp-image-add-layer theImage cyanLyr -1)
     (gimp-drawable-set-name cyanLyr "Cyan")
-					;create Red layer
+;create Red layer
     (gimp-image-add-layer theImage redLyr -1)
     (gimp-drawable-set-name redLyr "Red")
     (gimp-layer-set-mode redLyr SCREEN-MODE)
