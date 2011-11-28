@@ -1,0 +1,9 @@
+get gimp-levels working
+save off a thumbnail for uploading on DA
+If I knew how to work the gui I could wrap the wiggle stereoscopy and anaglyph items all into one and have a menu for the user to select the options appropriately
+Ask if have a displ map and if do prompt to select
+ask if want to stretch levels
+ask if want to contract levels
+ask if anaglyph or wiggle
+
+automate and perform in imagemagick
