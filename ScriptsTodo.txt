@@ -1,3 +1,5 @@
+Anaglyph script:
+----------------
 get gimp-levels working
 save off a thumbnail for uploading on DA
 If I knew how to work the gui I could wrap the wiggle stereoscopy and anaglyph items all into one and have a menu for the user to select the options appropriately
@@ -7,3 +9,8 @@ ask if want to contract levels
 ask if anaglyph or wiggle
 
 automate and perform in imagemagick
+
+CrayonPixelArt
+-------------
+DONE have new images created for each type of dithering
+-now name each of those separate images so we know which dithering was done and what interp was done
