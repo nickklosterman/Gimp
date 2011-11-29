@@ -1,5 +1,7 @@
 (define (script-fu-crayon-pixel-art-all-dither theImage drawable scale_factor interpolation chosen_palette autolevels)
-
+;NOTES:
+;for some reason it doesn't work on PNGs. currently you need to save as a gif to get it to work.
+;if it throws an error on a jpg bc it wasn't in indexed mode you may need to close gimp and reopen to clean up any variables that will prevent the successful execution of the script on subsequent attempts
   (let* (
 	 ; calls to PDB functions always return a list. We have
 	 ; to pick the first element with "car" explicitely, even
@@ -13,6 +15,7 @@
 	 (FSLBDither); (gimp-image-new new_width new_height 0));0 for rgb
 	 (FixedDither); (gimp-image-new new_width new_height 0));0 for rgb
 	 (NoDither)
+(Drawable);
 	       )
 
 
@@ -34,25 +37,32 @@
 (set! NoDither ( car (gimp-edit-named-paste-as-new "ImgVisible")))
 (gimp-display-new NoDither)
 (gimp-image-convert-indexed NoDither 0 4 0 FALSE FALSE chosen_palette )
+(set! Drawable ( car (gimp-image-get-active-drawable NoDither)))
+(gimp-drawable-set-name Drawable "No Dither")
 
 ;Create FS DITHER image
 (gimp-edit-named-copy-visible theImage "ImgVisible")
 (set! FSDither ( car (gimp-edit-named-paste-as-new "ImgVisible")))
 (gimp-display-new FSDither)
 (gimp-image-convert-indexed FSDither 1 4 0 FALSE FALSE chosen_palette )
+(set! Drawable ( car (gimp-image-get-active-drawable FSDither)))
+(gimp-drawable-set-name Drawable "FS Dither")
 
 ;Create FS Low Bleed DITHER image
 (gimp-edit-named-copy-visible theImage "ImgVisible")
 (set! FSLBDither ( car (gimp-edit-named-paste-as-new "ImgVisible")))
 (gimp-display-new FSLBDither)
 (gimp-image-convert-indexed FSLBDither 2 4 0 FALSE FALSE chosen_palette )
+(set! Drawable ( car (gimp-image-get-active-drawable FSLBDither)))
+(gimp-drawable-set-name Drawable "FSLB Dither")
 
 ;Create FIXED DITHER image
 (gimp-edit-named-copy-visible theImage "ImgVisible")
 (set! FixedDither ( car (gimp-edit-named-paste-as-new "ImgVisible")))
 (gimp-display-new FixedDither)
 (gimp-image-convert-indexed FixedDither 3 4 0 FALSE FALSE chosen_palette )
-
+(set! Drawable ( car (gimp-image-get-active-drawable FixedDither)))
+(gimp-drawable-set-name Drawable "Fixed Dither")
 
 ; empty the buffer
 ( gimp-buffer-delete "ImgVisible")
@@ -68,7 +78,7 @@
 
 (script-fu-register "script-fu-crayon-pixel-art-all-dither"
                     _"<Image>/Script-Fu/Pixel/Crayon-Pixel-Art-All-Dither"
-                    "Processes an image creating a pixelized image given a palette. Assumes input is a indexed gif."
+                    "Processes an indexed color JPG/GIF (doesnt work on pngs) image creating a pixelized image given a palette. Assumes input is a indexed gif."
                     "InkyDinky"
                     "InkyDinky"
                     "2011 11 28"
