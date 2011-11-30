@@ -1,5 +1,7 @@
 (define (script-fu-crayon-pixel-art-all-dither theImage drawable scale_factor interpolation chosen_palette autolevels)
-
+;NOTES:
+;for some reason it doesn't work on PNGs. currently you need to save as a gif to get it to work.
+;if it throws an error on a jpg bc it wasn't in indexed mode you may need to close gimp and reopen to clean up any variables that will prevent the successful execution of the script on subsequent attempts
   (let* (
 	 ; calls to PDB functions always return a list. We have
 	 ; to pick the first element with "car" explicitely, even
@@ -13,7 +15,8 @@
 	 (FSLBDither); (gimp-image-new new_width new_height 0));0 for rgb
 	 (FixedDither); (gimp-image-new new_width new_height 0));0 for rgb
 	 (NoDither)
-(Drawable);
+	 (Drawable);
+	 (InputImageMode);mode of the input image. needed so we can prevent errors when getting an RGB image as input.
 	       )
 
 
@@ -26,8 +29,12 @@
     (gimp-levels-stretch theImage)
 )
 
+(set! InputImageMode ( car (gimp-image-base-type theImage )))
+(if (not (= InputImageMode 0))
+    (gimp-convert-rgb theImage)
+);convert to RGB if the image isn't all ready an RGB image
+
 ;Scale the Image to blow up the gif so we can see it. this helps to allow for a more pleasing picture to dither. if the image is too small the dithering is awful
-(gimp-convert-rgb theImage)
 (gimp-image-scale-full theImage new_width new_height interpolation );we don't interpolate when we scale
 
 ;Create NO DITHER image
@@ -76,7 +83,7 @@
 
 (script-fu-register "script-fu-crayon-pixel-art-all-dither"
                     _"<Image>/Script-Fu/Pixel/Crayon-Pixel-Art-All-Dither"
-                    "Processes an image creating a pixelized image given a palette. Assumes input is a indexed gif."
+                    "Processes an indexed color JPG/GIF (doesnt work on pngs) image creating a pixelized image given a palette. Assumes input is a indexed gif."
                     "InkyDinky"
                     "InkyDinky"
                     "2011 11 28"

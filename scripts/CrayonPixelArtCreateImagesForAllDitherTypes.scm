@@ -15,7 +15,8 @@
 	 (FSLBDither); (gimp-image-new new_width new_height 0));0 for rgb
 	 (FixedDither); (gimp-image-new new_width new_height 0));0 for rgb
 	 (NoDither)
-(Drawable);
+	 (Drawable);
+	 (InputImageMode);mode of the input image. needed so we can prevent errors when getting an RGB image as input.
 	       )
 
 
@@ -25,11 +26,16 @@
 ;apply autoleveling if desired
 ;this is pretty useless if the image is a gif as typically pure white and pure black are two of the colors in the palette so this does nothing in those cases.
 (if (= autolevels TRUE)
-    (gimp-levels-stretch theImage)
+    (set! Drawable ( car (gimp-image-get-active-drawable theImage)));t
+    (gimp-levels-stretch Drawable);seems to work on all images except for pngs in indexed mode-->> works after resetting the drawable as above.
 )
 
+(set! InputImageMode ( car (gimp-image-base-type theImage )))
+(if (not (= InputImageMode 0))
+    (gimp-convert-rgb theImage)
+);convert to RGB if the image isn't all ready an RGB image
+
 ;Scale the Image to blow up the gif so we can see it. this helps to allow for a more pleasing picture to dither. if the image is too small the dithering is awful
-(gimp-convert-rgb theImage)
 (gimp-image-scale-full theImage new_width new_height interpolation );we don't interpolate when we scale
 
 ;Create NO DITHER image

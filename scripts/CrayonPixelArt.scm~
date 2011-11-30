@@ -8,7 +8,7 @@
 	 (height (car  (gimp-drawable-height drawable)))
 	 (new_width    (* width  scale_factor ))
 	 (new_height   (* height  scale_factor))
-	 (InputImageMode);mode of the input image. needed so we can prevent errors when getting an RGB image as input. 	 
+	 
 	       )
 
 
@@ -17,11 +17,7 @@
 
 ;    (gimp-image-scale-full theImage (* (gimp-image-width theImage) scale_factor) (* (gimp-image-height theImage) scale_factor)  0);can't do this :(
 
-    (set! InputImageMode ( car (gimp-image-base-type theImage )))
-    (if (not (= InputImageMode 0))
-	(gimp-convert-rgb theImage)
-	);convert to RGB if the image isn't all ready an RGB image
-    
+    (gimp-image-convert-rgb theImage);need to set to rgb so interpolation takes effect and need it so can convert to indexed as well.
     (gimp-image-scale-full theImage new_width new_height interpolation );we don't interpolate when we scale
 
 
@@ -32,8 +28,7 @@
 ;apply autoleveling if desired
 ;this is pretty useless if the image is a gif as typically pure white and pure black are two of the colors in the palette so this does nothing in those cases.
 (if (= autolevels TRUE)
-
-    (gimp-levels-stretch drawable));FML I kept getting an error here bc it can run on an IMAGE yet it really wants a DRAWABLE;theImage))
+    (gimp-levels-stretch theImage))
 
 ;apply dither
 (if (= dithertype 1)
