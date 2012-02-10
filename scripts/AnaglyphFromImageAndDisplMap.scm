@@ -4,12 +4,20 @@
  (theLayersList (cadr (gimp-image-get-layers theImage)))
         (displmapLyr (aref theLayersList 0)) ;if you have multiple layers the image map needs to be the topmost layer
         (theBackgroundLayer (aref theLayersList 1))
-
-
 	 (redLyr (car (gimp-layer-copy drawable TRUE)))
 	 (cyanLyr (car (gimp-layer-copy drawable TRUE)))
+	 (points (make-vector 8 'byte))
+         )
 
-	 )
+    (aset points 0 0)
+    (aset points 1 0)
+    (aset points 2 0)
+    (aset points 3 0)
+    (aset points 4 0)
+    (aset points 5 0)
+    (aset points 6 0)
+    (aset points 7 0)
+
 
 					;create undo group 
     (gimp-image-undo-group-start theImage)
@@ -24,10 +32,21 @@
                                     ;create Red layer                                          
     (gimp-image-add-layer theImage redLyr -1)
     (gimp-drawable-set-name redLyr "Wiggle2 (100 ms)")
+    (gimp-layer-set-mode redLyr SCREEN-MODE)
+
+                                      ;mask channels                                                                                      
+    (gimp-curves-spline cyanLyr 1 8 points)
+    (gimp-curves-spline redLyr 2 8 points)
+    (gimp-curves-spline redLyr 3 8 points)
+
     
                                         ;Apply displacement map, the negative of the value is used for the cyan layer   
     (plug-in-displace RUN-NONINTERACTIVE theImage redLyr displacement_offset_x displacement_offset_y 1 1 displmapLyr displmapLyr edge_behavior)
     (plug-in-displace RUN-NONINTERACTIVE theImage cyanLyr (- 0 displacement_offset_x) (- 0 displacement_offset_y) 1 1 displmapLyr displmapLyr edge_behavior)
+
+
+					;merge layers down to clean up and create the single anaglyph image
+    (gimp-image-merge-down theImage redLyr 2)
 
 		;create undo group 
     (gimp-image-undo-group-end theImage)
