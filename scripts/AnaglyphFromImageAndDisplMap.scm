@@ -56,7 +56,7 @@
   )
 (script-fu-register "script-fu-anaglyph_displ_map"
                     _"<Image>/Script-Fu/AnaglyphTools/Anaglyph-from-Image-and-Displ-Map"
-                    "Processes an image createing a depth map from the given image and then creating a flickerglyph."
+                    "Processes an image and its depth map creating an anaglyph. Topmost layer = depth map, background layer selected"
                     "InkyDinky"
                     "InkyDinky"
                     "2011 11 9"

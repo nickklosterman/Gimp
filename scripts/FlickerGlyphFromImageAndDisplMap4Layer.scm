@@ -46,7 +46,7 @@
   )
 (script-fu-register "script-fu-flickerglyph_displ_map-4layer"
                     _"<Image>/Script-Fu/AnaglyphTools/FlickerGlyph-from-Image-and-Displ-Map-4Layer"
-                    "Processes an image createing a depth map from the given image and then creating a flickerglyph."
+                    "Processes an image and depth map and then creates a flickerglyph that loops nicely back on itself. Uses 4 frames for added smoothness instead of 3. Topmost layer=depth map, background layer selected"
                     "InkyDinky"
                     "InkyDinky"
                     "2011 11 9"
