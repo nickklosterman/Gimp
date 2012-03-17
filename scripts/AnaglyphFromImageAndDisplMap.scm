@@ -1,4 +1,4 @@
-(define (script-fu-anaglyph_displ_map theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior rescale_levels levelsmode)
+(define (script-fu-anaglyph_displ_map theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior rescale_levels levelsmode apply_blur blur_x blur_y)
 
   (let* (
 	 (theLayersList (cadr (gimp-image-get-layers theImage)))
@@ -19,6 +19,9 @@
     (aset points 6 0)
     (aset points 7 0)
 
+
+;Displacement map should be top layer
+;image to be displaced should be the layer that is selected.
 
 
 					;TODO:auto turn the displ map layer visibility off
@@ -54,11 +57,15 @@
     (gimp-drawable-set-name redLyr "Red Layer")
     (gimp-layer-set-mode redLyr SCREEN-MODE)
 
-					;mask channels                                                                                      
+					;mask channels to create Red image, Cyan image
     (gimp-curves-spline cyanLyr 1 8 points)
     (gimp-curves-spline redLyr 2 8 points)
     (gimp-curves-spline redLyr 3 8 points)
 
+;apply blur if desired ; this helps tremendously with the jagged edges that sometimes are produced
+    (if ( = apply_blur TRUE)
+	(plug-in-gauss TRUE theImage displmapLyr blur_x blur_y 0)
+	) ;close 
     
                                         ;Apply displacement map, the negative of the value is used for the cyan layer   
     (plug-in-displace RUN-NONINTERACTIVE theImage redLyr displacement_offset_x displacement_offset_y 1 1 displmapLyr displmapLyr edge_behavior)
@@ -92,8 +99,11 @@
 		    SF-OPTION "Displacement Mode"  '("Cartesian" "Polar");this doesn't do anything
 		    SF-OPTION "Edge Behavior"  '("Wrap" "Smear" "Black")
 		    SF-TOGGLE     "Rescale Levels?"   FALSE
-		    SF-OPTION "Levels Mode"  '("Value" "Red" "Green" "Blue" "Al\
-pha" "RGB")
+		    SF-OPTION "Levels Mode"  '("Value" "Red" "Green" "Blue" "Alpha" "RGB")
+		    SF-TOGGLE     "Apply Gaussian Blur?"   FALSE
+		    SF-ADJUSTMENT "X Blur Radius (pixels)" (list 10 0 60 1 10 1 SF-SLIDER )
+		    SF-ADJUSTMENT "Y Blur Radius (pixels)" (list 10 0 60 1 10 1 SF-SLIDER )
+
 
                     )
 

@@ -1,0 +1,40 @@
+Cut objects out starting from the back and move forward.
+Place cutout on a new layer.
+For selections, turn AA off.
+Displacment Map should only cover half the range otherwise it seems to pull more of an outline of the region.
+GIMP:Close->Black, Far->White for the displacment map (opposite for Photoshop). Or try flip flop and see how you like it.
+Try both inverting the displacement map.  But so far the Black->Grey seems to work best. (vs Grey(farther) to Black(closer))
+This way the farther away doesn't seem to show up all blurred.
+I don't know what it is but the example in "Photoshop_3d_Anaglyph_Tutorial_by_goldomeg.jpg" looks a hell of a lot better than mine.
+Gotta try it on photoshop.
+
+Can do a shitty easy job by 
+1)copy background image
+2) desaturate via luminosity
+3)levels desaturated layer to 0-128
+4)Run anaglyph3
+
+The smaller the image/finer the line art the less x offest you'll want. Too much will move the image off the side of the image area as well as blur the shift too much
+--> Less is more/better
+A rule of thumb might be that the max displacement amount be ~10% of the longest dimension
+
+Applying a blur of some sort to the displacement map will help remove jaggies from the final anaglyph. Once I found this out the result images looked a lot better.
+Blurring also helps take care of nooks and crannies where you might've missed applying the correct color.
+This method works really well.
+Going for more than a few shading levels seems a bit pointless. I can't really see an appreciable difference.
+
+Avoid using an image that has a lot of red in it. If it does then use the color tools to shift the red to a different color.  The red will come out dark brown/blood red when viewed through the glasses.
+
+Use a flat colored layer placed behind your displ map layer to help look for missed spots.
+
+Flatting Techniques:for BW art threshold first. Use a bucket to do bulk filling. Use the pencil to separate fill areas. You just need to break the black line btw areas. Then bucket the black line to take care of the outline.
+Use edge-detect to help flat out areas as well.
+Use edge-detect. Then threshold to clean up the edges.
+
+The need to rescale the color levels:
+The algorithm for displacement relies on a midpoint of 127.5 (256/2).
+"Whiter" values are < 128 and therefore displace things in the -x/-y direction.
+"Blacker" valuesa are > 128 and therefore displace things in the +x/+y direction.
+Without the rescale we are therefore shifting in both directions for the Red layer and the Cyan layer. This isn't what we want since we want to shift one layer right and one layer left. Without rescaling you shift both channels in both directions and just make a mess of things.
+This can often make for a more pronounced effect. However, most times it just turns out ugly. At least that has been my experience with pure B/W images.
+This phenomenon is particularly ugly with BW images.
