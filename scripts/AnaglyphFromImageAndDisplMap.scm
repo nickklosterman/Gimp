@@ -20,28 +20,29 @@
     (aset points 7 0)
 
 
-;Displacement map should be top layer
-;image to be displaced should be the layer that is selected.
+					;Displacement map should be top layer
+					;image to be displaced should be the layer that is selected.
 
 
 					;TODO:auto turn the displ map layer visibility off
-;DONE: 2012-03-15 TODO:make sure opacity 100%
+					;DONE: 2012-03-15 TODO:make sure opacity 100%
 
 					;create undo group 
     (gimp-image-undo-group-start theImage)
 
+    (gimp-selection-all theImage)
     (if ( = isRGBmode FALSE)
 	(gimp-image-convert-rgb theImage) ;the parens are crucial or it will fail
 	)
-;make sure opacity at 100%
-(gimp-layer-set-opacity drawable 100 )
-(gimp-layer-set-opacity displmapLyr 100 )
-(gimp-layer-set-opacity theBackgroundLayer 100 )
+					;make sure opacity at 100%
+    (gimp-layer-set-opacity drawable 100 )
+    (gimp-layer-set-opacity displmapLyr 100 )
+    (gimp-layer-set-opacity theBackgroundLayer 100 )
 
 
-;creating copies here bc if created when program called they will cause an error if we need to convert to RGB. image will be RGB but layers will be of diff type.
-	(set! redLyr (car (gimp-layer-copy drawable TRUE ))) 
-	(set! cyanLyr (car (gimp-layer-copy drawable TRUE ))) 
+					;creating copies here bc if created when program called they will cause an error if we need to convert to RGB. image will be RGB but layers will be of diff type.
+    (set! redLyr (car (gimp-layer-copy drawable TRUE ))) 
+    (set! cyanLyr (car (gimp-layer-copy drawable TRUE ))) 
 
 
 					;I had this commented out even though we want to switch based on its input 2012-03-14 , for some reason I can't get this if statment to work. I had the data type wrong. Works now.
@@ -62,7 +63,7 @@
     (gimp-curves-spline redLyr 2 8 points)
     (gimp-curves-spline redLyr 3 8 points)
 
-;apply blur if desired ; this helps tremendously with the jagged edges that sometimes are produced
+					;apply blur if desired ; this helps tremendously with the jagged edges that sometimes are produced
     (if ( = apply_blur TRUE)
 	(plug-in-gauss TRUE theImage displmapLyr blur_x blur_y 0)
 	) ;close 
@@ -73,11 +74,11 @@
 
 
 					;merge layers down to clean up and create the single anaglyph image
-    
+
     (gimp-image-merge-down theImage redLyr 2)
 
 					;turn off visibility of 
-(gimp-layer-set-visible displmapLyr FALSE )
+    (gimp-layer-set-visible displmapLyr FALSE )
 					;end undo group 
     (gimp-image-undo-group-end theImage)
 

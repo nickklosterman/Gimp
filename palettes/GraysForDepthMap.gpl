@@ -1,0 +1,12 @@
+GIMP Palette
+Name: DisplMapGrays
+Columns: 0
+#
+  0   0   0	gray0
+ 41  41  41	gray16
+ 82  82  82	gray32
+122 122 122	gray48
+163 163 163	gray64
+204 204 204	gray80
+245 245 245	gray96
+255 255 255	gray100

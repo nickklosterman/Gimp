@@ -29,7 +29,11 @@ Use a flat colored layer placed behind your displ map layer to help look for mis
 
 Flatting Techniques:for BW art threshold first. Use a bucket to do bulk filling. Use the pencil to separate fill areas. You just need to break the black line btw areas. Then bucket the black line to take care of the outline.
 Use edge-detect to help flat out areas as well.
-Use edge-detect. Then threshold to clean up the edges.
+Use edge-detect. Then threshold to clean up the edges. Then invert and reduce opacity.
+Now go and block off areas of like depth or just distinct objects. If its not a flat object you can use the b(l)end/gradient tool with B/W as the colors.  Then use the smear/smudge/dodge/burn to further modify the shading in that area.
+The colors may need to be adjusted away from red to give the final a more vibrant color set.
+
+Use the Blend/Gradient tool to work on 
 
 The need to rescale the color levels:
 The algorithm for displacement relies on a midpoint of 127.5 (256/2).
