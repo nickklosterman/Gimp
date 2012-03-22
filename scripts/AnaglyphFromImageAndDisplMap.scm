@@ -1,4 +1,4 @@
-(define (script-fu-anaglyph_displ_map theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior rescale_levels levelsmode apply_blur blur_x blur_y)
+(define (script-fu-anaglyph_displ_map theImage drawable displacement_offset_x displacement_offset_y  displacement_type edge_behavior rescale_levels levelsmode apply_blur blur_x blur_y anaglyph_algorithm)
 
   (let* (
 	 (theLayersList (cadr (gimp-image-get-layers theImage)))
@@ -28,7 +28,11 @@
 					;DONE: 2012-03-15 TODO:make sure opacity 100%
 
 					;create undo group 
-    (gimp-image-undo-group-start theImage)
+;    (gimp-image-undo-group-start theImage)
+
+    (gimp-message-set-handler 0)
+					;(gimp-message "Bitches")
+    (gimp-message (number->string anaglyph_algorithm 10))
 
     (gimp-selection-all theImage)
     (if ( = isRGBmode FALSE)
@@ -39,11 +43,43 @@
     (gimp-layer-set-opacity displmapLyr 100 )
     (gimp-layer-set-opacity theBackgroundLayer 100 )
 
+(cond 
+[(= anaglyph_algorithm 0) (gimp-message "optimo")] ;
+[(= anaglyph_algorithm 1) (gimp-message "half color")]; 
+[(= anaglyph_algorithm 2) (gimp-message "gray")]; 
+[(= anaglyph_algorithm 3) (gimp-message "full color")] ; full color
+)
+
+;I could never get scheme's (case or the above (cond thingee to work.
+;it also appears that in the if statement only the first line/command is executed
+;ugggh wtf. 
+
+
+;this if statement "leaks" I'm not sure if it really just performs the one plug-in-colors or if it does multiple. when undoing the undo group I see only one "channel-mixer" item show up in the undo tab.
+;(set! anaglyph_algorithm 2)
+(if (= anaglyph_algorithm 0)
+;optimized
+(plug-in-colors-channel-mixer RUN-NONINTERACTIVE theImage drawable FALSE 0.0   0.7 0.3 0.0 1.0 0.0 0.0 0.0 1.0) 
+(gimp-message "we have a 0")
+)
+(if (= anaglyph_algorithm 1)
+; half color
+(plug-in-colors-channel-mixer RUN-NONINTERACTIVE theImage drawable FALSE 0.299 0.587 0.114 0.0 1.0 0.0 0.0 0.0 1.0)  
+(gimp-message "we have a 1")
+)
+(if (= anaglyph_algorithm 2)
+;gray
+(plug-in-colors-channel-mixer RUN-NONINTERACTIVE theImage drawable FALSE 0.299 0.587 0.114 0.299 0.587 0.114 0.299 0.587 0.114)  
+(gimp-message "we have a 2")
+)
+(if (= anaglyph_algorithm 3)
+(gimp-message "we have a 3a")
+(gimp-message "we have a 3b")
+)
 
 					;creating copies here bc if created when program called they will cause an error if we need to convert to RGB. image will be RGB but layers will be of diff type.
     (set! redLyr (car (gimp-layer-copy drawable TRUE ))) 
     (set! cyanLyr (car (gimp-layer-copy drawable TRUE ))) 
-
 
 					;I had this commented out even though we want to switch based on its input 2012-03-14 , for some reason I can't get this if statment to work. I had the data type wrong. Works now.
     (if ( = rescale_levels TRUE)
@@ -58,6 +94,8 @@
     (gimp-drawable-set-name redLyr "Red Layer")
     (gimp-layer-set-mode redLyr SCREEN-MODE)
 
+
+					;this could be done easier using the channels mixer
 					;mask channels to create Red image, Cyan image
     (gimp-curves-spline cyanLyr 1 8 points)
     (gimp-curves-spline redLyr 2 8 points)
@@ -99,13 +137,13 @@
 		    SF-ADJUSTMENT "Y/Tangent Displacement Offset (pixels)" (list 0 0 60 1 10 0 SF-SLIDER )
 		    SF-OPTION "Displacement Mode"  '("Cartesian" "Polar");this doesn't do anything
 		    SF-OPTION "Edge Behavior"  '("Wrap" "Smear" "Black")
-		    SF-TOGGLE     "Rescale Levels?"   FALSE
+		    SF-TOGGLE     "Rescale Levels?"   TRUE
 		    SF-OPTION "Levels Mode"  '("Value" "Red" "Green" "Blue" "Alpha" "RGB")
-		    SF-TOGGLE     "Apply Gaussian Blur?"   FALSE
+		    SF-TOGGLE     "Apply Gaussian Blur?"   TRUE
 		    SF-ADJUSTMENT "X Blur Radius (pixels)" (list 10 0 60 1 10 1 SF-SLIDER )
 		    SF-ADJUSTMENT "Y Blur Radius (pixels)" (list 10 0 60 1 10 1 SF-SLIDER )
 
-
+		    SF-OPTION     "Anaglyph Mode"        '("optimized" "half color"  "gray" "color" )
                     )
 
 					;script to creat array of 256 zeroes to remove channels.
