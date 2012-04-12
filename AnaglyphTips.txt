@@ -31,6 +31,7 @@ Flatting Techniques:for BW art threshold first. Use a bucket to do bulk filling.
 Use edge-detect to help flat out areas as well.
 Use edge-detect. Then threshold to clean up the edges. Then invert and reduce opacity.
 Now go and block off areas of like depth or just distinct objects. If its not a flat object you can use the b(l)end/gradient tool with B/W as the colors.  Then use the smear/smudge/dodge/burn to further modify the shading in that area.
+You want to use a very fine (1px) brush otherwise you'll get those discontinuity artifacts in the depth map from the edges that were detected.
 The colors may need to be adjusted away from red to give the final a more vibrant color set.
 
 Use the Blend/Gradient tool to work on 

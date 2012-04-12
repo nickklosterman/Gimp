@@ -28,7 +28,7 @@
 					;DONE: 2012-03-15 TODO:make sure opacity 100%
 
 					;create undo group 
-;    (gimp-image-undo-group-start theImage)
+    (gimp-image-undo-group-start theImage)
 
     (gimp-message-set-handler 0)
 					;(gimp-message "Bitches")

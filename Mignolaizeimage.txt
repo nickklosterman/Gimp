@@ -1,0 +1,19 @@
+choose a image w strong shadows, possibly BW image
+threshold -> oilify -> pixelize -> oilify -> possibly threshold again if want pure BW
+
+for color images
+brightness / contrast -> desaturate -> oilify
+
+play w brightness / contrast to get appropriate shading
+
+oilify -> bright/contr -> threshold -> oilify -> pixelize
+
+I need some type of palette knife filter to create the sharp edges that mignola does
+
+possibly use tiling to get the angular look to the art
+
+I feel like for the most part its just play with brightness/contrast and then threshold to get the feel you want.
+
+possibly use edge detect to help separate some areas you want to keep dark or light
+
+theshold -> pixelize -> oilify
